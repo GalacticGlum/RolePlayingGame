@@ -2,6 +2,7 @@
 
 #include "RolePlayingGameGameMode.h"
 #include "RolePlayingGameCharacter.h"
+#include "RolePlayingGamePlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 
 ARolePlayingGameGameMode::ARolePlayingGameGameMode()
@@ -12,4 +13,6 @@ ARolePlayingGameGameMode::ARolePlayingGameGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	PlayerControllerClass = ARolePlayingGamePlayerController::StaticClass();
 }

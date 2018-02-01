@@ -74,6 +74,9 @@ void ARolePlayingGamePlayerController::Turn(float value)
 
 void ARolePlayingGamePlayerController::LeftClick()
 {
+	// If our player is moving and we don't have a move command initiated, we don't want to initiate a new move command.
+	if (ControlledCharacter->GetVelocity().Size() != 0 && !m_MoveToMousePosition) return;
+
 	// If we have already initiated a movement command, we need to cancel it.
 	CancelMovementCommand();
 
@@ -82,7 +85,9 @@ void ARolePlayingGamePlayerController::LeftClick()
 
 	UWorld* world = GetWorld();
 
-	m_CurrentGoalDecal = world->SpawnActor<AActor>(m_GoalDecalBlueprint, result.Location, FRotator::ZeroRotator);
+	FVector distance = ControlledCharacter->GetActorLocation() - result.Location;
+	float angle = FMath::RadiansToDegrees(FMath::Atan2(distance.Y, distance.X));
+	m_CurrentGoalDecal = world->SpawnActor<AActor>(m_GoalDecalBlueprint, result.Location, FRotator(0, angle - 90, 0));
 
 	m_MoveToMousePosition = true;
 	world->GetNavigationSystem()->SimpleMoveToLocation(this, result.Location);

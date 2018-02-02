@@ -11,7 +11,7 @@
 ARolePlayingGamePlayerController::ARolePlayingGamePlayerController()
 {
 	// Load the goal decal
-	ConstructorHelpers::FObjectFinder<UClass> goalDecalObjectFinder(TEXT("/Game/Blueprints/BP_Goal_Decal.BP_Goal_Decal_C"));
+	static ConstructorHelpers::FObjectFinder<UClass> goalDecalObjectFinder(TEXT("/Game/Blueprints/BP_Goal_Decal.BP_Goal_Decal_C"));
 	if (goalDecalObjectFinder.Object)
 	{
 		m_GoalDecalBlueprint = goalDecalObjectFinder.Object;

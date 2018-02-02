@@ -7,12 +7,13 @@
 
 ARolePlayingGameGameMode::ARolePlayingGameGameMode()
 {
-	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
-	if (PlayerPawnBPClass.Class != NULL)
+	// Set default pawn class to our Blueprinted character
+	static ConstructorHelpers::FClassFinder<APawn> playerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
+	if (playerPawnBPClass.Class != NULL)
 	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
+		DefaultPawnClass = playerPawnBPClass.Class;
 	}
 
+	// Set the player controller class to our custom player controller
 	PlayerControllerClass = ARolePlayingGamePlayerController::StaticClass();
 }

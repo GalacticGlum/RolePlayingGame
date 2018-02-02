@@ -13,19 +13,21 @@ class ROLEPLAYINGGAME_API ARolePlayingGamePlayerController : public APlayerContr
 public:
 	ARolePlayingGamePlayerController();
 
+	/** The minimum angle that the player can turn to */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float MinimumTurnAngle = -40.0f;
 
+	/** The maximum angle that the player can turn to */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float MaximumTurnAngle = 0.0f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	/** The controlled pawn as a ARolePlayingGameCharacter */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class ARolePlayingGameCharacter* ControlledCharacter;
 
+	/** Cancels the current movement command */
 	UFUNCTION(BlueprintCallable)
 	void CancelMovementCommand();
-
 protected:
 	virtual void BeginPlay();
 
@@ -37,7 +39,6 @@ private:
 
 	void Jump();
 	void StopJumping();
-
 	void LeftClick();
 
 	void Lookup(float value);

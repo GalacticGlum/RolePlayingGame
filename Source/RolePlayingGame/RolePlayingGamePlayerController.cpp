@@ -51,6 +51,42 @@ void ARolePlayingGamePlayerController::SetupInputComponent()
 	InputComponent->BindAxis("MoveRight", this, &ARolePlayingGamePlayerController::MoveRight);
 }
 
+void ARolePlayingGamePlayerController::LeftClick()
+{
+	// If our player is moving and we don't have a move command initiated, we don't want to initiate a new move command.
+	if (ControlledCharacter->GetVelocity().Size() != 0 && !m_MoveToMousePosition) return;
+
+	// If we have already initiated a movement command, we need to cancel it.
+	CancelMovementCommand();
+
+	FHitResult result;
+	GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), true, result);
+
+	UWorld* world = GetWorld();
+
+	FVector distance = ControlledCharacter->GetActorLocation() - result.Location;
+	float angle = FMath::RadiansToDegrees(FMath::Atan2(distance.Y, distance.X));
+	m_CurrentGoalDecal = world->SpawnActor<AActor>(m_GoalDecalBlueprint, result.Location, FRotator(0, angle - 90, 0));
+
+	m_MoveToMousePosition = true;
+	world->GetNavigationSystem()->SimpleMoveToLocation(this, result.Location);
+}
+
+void ARolePlayingGamePlayerController::Jump()
+{
+	if (m_MoveToMousePosition)
+	{
+		CancelMovementCommand();
+	}
+
+	ControlledCharacter->Jump();
+}
+
+void ARolePlayingGamePlayerController::StopJumping()
+{
+	ControlledCharacter->StopJumping();
+}
+
 void ARolePlayingGamePlayerController::Lookup(float value)
 {
 	// If we can't turn or the axis value is zero then we can bail from this function.
@@ -79,39 +115,6 @@ void ARolePlayingGamePlayerController::Zoom(float value)
 
 	USpringArmComponent* boomArm = ControlledCharacter->GetCameraBoom();
 	boomArm->TargetArmLength = FMath::Clamp(boomArm->TargetArmLength - value * ZoomSensitivity, MinimumCameraDistance, MaximumCameraDistance);
-}
-
-void ARolePlayingGamePlayerController::LeftClick()
-{
-	// If our player is moving and we don't have a move command initiated, we don't want to initiate a new move command.
-	if (ControlledCharacter->GetVelocity().Size() != 0 && !m_MoveToMousePosition) return;
-
-	// If we have already initiated a movement command, we need to cancel it.
-	CancelMovementCommand();
-
-	FHitResult result;
-	GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), true, result);
-
-	UWorld* world = GetWorld();
-
-	FVector distance = ControlledCharacter->GetActorLocation() - result.Location;
-	float angle = FMath::RadiansToDegrees(FMath::Atan2(distance.Y, distance.X));
-	m_CurrentGoalDecal = world->SpawnActor<AActor>(m_GoalDecalBlueprint, result.Location, FRotator(0, angle - 90, 0));
-
-	m_MoveToMousePosition = true;
-	world->GetNavigationSystem()->SimpleMoveToLocation(this, result.Location);
-}
-
-void ARolePlayingGamePlayerController::CancelMovementCommand()
-{
-	if(IsValid(m_CurrentGoalDecal))
-	{
-		StopMovement();
-
-		GetWorld()->DestroyActor(m_CurrentGoalDecal);
-		m_CurrentGoalDecal = nullptr;
-		m_MoveToMousePosition = false;
-	}
 }
 
 void ARolePlayingGamePlayerController::MoveForward(float value)
@@ -152,17 +155,14 @@ void ARolePlayingGamePlayerController::MoveRight(float value)
 	}
 }
 
-void ARolePlayingGamePlayerController::Jump()
+void ARolePlayingGamePlayerController::CancelMovementCommand()
 {
-	if (m_MoveToMousePosition)
+	if (IsValid(m_CurrentGoalDecal))
 	{
-		CancelMovementCommand();
+		StopMovement();
+
+		GetWorld()->DestroyActor(m_CurrentGoalDecal);
+		m_CurrentGoalDecal = nullptr;
+		m_MoveToMousePosition = false;
 	}
-
-	ControlledCharacter->Jump();
-}
-
-void ARolePlayingGamePlayerController::StopJumping()
-{
-	ControlledCharacter->StopJumping();
 }

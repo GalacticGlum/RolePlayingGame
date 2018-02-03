@@ -8,7 +8,7 @@
 ARolePlayingGameGameMode::ARolePlayingGameGameMode()
 {
 	// Set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> playerPawnBPClass(TEXT("/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter"));
+	static ConstructorHelpers::FClassFinder<APawn> playerPawnBPClass(TEXT("/Game/Blueprints/CHAR_Player"));
 	if (playerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = playerPawnBPClass.Class;

@@ -45,7 +45,6 @@ void ARolePlayingGamePlayerController::SetupInputComponent()
 
 	InputComponent->BindAxis("Lookup", this, &ARolePlayingGamePlayerController::Lookup);
 	InputComponent->BindAxis("Turn", this, &ARolePlayingGamePlayerController::Turn);
-	InputComponent->BindAxis("Zoom", this, &ARolePlayingGamePlayerController::Zoom);
 
 	InputComponent->BindAxis("MoveForward", this, &ARolePlayingGamePlayerController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &ARolePlayingGamePlayerController::MoveRight);
@@ -71,14 +70,6 @@ void ARolePlayingGamePlayerController::Turn(float value)
 	newRotation.Yaw += value * 2;
 
 	ControlledCharacter->GetCameraBoom()->SetRelativeRotation(newRotation);
-}
-
-void ARolePlayingGamePlayerController::Zoom(float value)
-{
-	if (ControlledCharacter == nullptr) return;
-
-	USpringArmComponent* boomArm = ControlledCharacter->GetCameraBoom();
-	boomArm->TargetArmLength = FMath::Clamp(boomArm->TargetArmLength - value * ZoomSensitivity, MinimumCameraDistance, MaximumCameraDistance);
 }
 
 void ARolePlayingGamePlayerController::LeftClick()

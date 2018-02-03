@@ -14,12 +14,24 @@ public:
 	ARolePlayingGamePlayerController();
 
 	/** The minimum angle that the player can turn to */
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float MinimumTurnAngle = -40.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MinimumTurnAngle = -60.0f;
 
 	/** The maximum angle that the player can turn to */
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float MaximumTurnAngle = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaximumTurnAngle = 20.0f;
+
+	/** The minimum distance between the camera and the player */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MinimumCameraDistance = 150.0f;
+
+	/** The minimum distance between the camera and the player */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaximumCameraDistance = 650.0f;
+
+	/** The sensitivity of the zoom */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ZoomSensitivity = 20.0f;
 
 	/** The controlled pawn as a ARolePlayingGameCharacter */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -43,6 +55,7 @@ private:
 
 	void Lookup(float value);
 	void Turn(float value);
+	void Zoom(float value);
 
 	/** Called for forwards/backward input */
 	void MoveForward(float value);
